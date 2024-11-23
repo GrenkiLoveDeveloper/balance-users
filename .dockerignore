@@ -1,0 +1,30 @@
+# Игнорировать директории с зависимостями
+/vendor
+/node_modules
+
+# Игнорировать скомпилированные файлы
+/public/css
+/public/js
+
+# Игнорировать файлы и директории, связанные с Git
+/.git
+/.gitignore
+
+# Игнорировать директории хранения
+/storage/app
+/storage/logs
+/storage/framework/cache/data
+/storage/framework/sessions/*
+
+# Игнорировать файлы окружения
+/.env
+
+# Игнорировать файлы IDE
+/.idea
+/.vscode
+
+# Игнорировать файлы логов
+*.log
+
+# Игнорировать все временные файлы
+*~
