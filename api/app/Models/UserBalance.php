@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[ObservedBy([UserBalanceObserver::class])]
+// #[ObservedBy([UserBalanceObserver::class])]
 class UserBalance extends Model
 {
     use HasFactory;

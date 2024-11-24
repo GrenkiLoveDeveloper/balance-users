@@ -47,6 +47,13 @@ class ProcessBalanceOperation implements ShouldQueue
             $newBalance = $this->type === 1 ? $balance + $this->amount : $balance - $this->amount;
 
             $user->balance()->updateOrCreate([], ['balance' => $newBalance]);
+
+            Transaction::create([
+                'user_id' => $user->id,
+                'amount' => $this->amount,
+                'type' => $this->type,
+                'description' => $this->description,
+            ]);
         });
     }
 }

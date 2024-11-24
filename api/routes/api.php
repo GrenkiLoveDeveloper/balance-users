@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-
 Route::post('/login', LoginController::class)->middleware('guest');
-Route::post('/logout', LogoutController::class)->middleware('auth:sanctum');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', LogoutController::class);
+    Route::get('/balance/{id}', [DashboardController::class, 'getData']);
+    Route::get('/history', [TransactionController::class, 'getHistory']);
+});

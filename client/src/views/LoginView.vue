@@ -60,7 +60,10 @@
               </div>
 
               <div>
-                <p class="mb-0">У вас нет аккаунта? <span class="text-white-50 fw-bold">Очень жаль...</span></p>
+                <p class="mb-0">
+                  У вас нет аккаунта?
+                  <span class="text-white-50 fw-bold">Очень жаль... Запустите команду на бэке!</span>
+                </p>
               </div>
             </div>
           </div>

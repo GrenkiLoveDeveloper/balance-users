@@ -87,19 +87,6 @@ services:
     networks:
       - app-local-network
 
-  local-scheduler:
-    build:
-      context: docker/php/cron
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-      - ./api:/var/www/api
-    networks:
-      - app-local-network
-    restart: always
-    depends_on:
-      - php
-
   local-supervisor:
     build:
       context: docker/php/supervisor

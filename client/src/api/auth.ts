@@ -1,5 +1,6 @@
 import axios from '@/plugins/axios';
 import { IUser } from '@/types/auth';
+
 /**
  * Авторизация логин
  *

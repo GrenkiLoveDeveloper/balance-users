@@ -6,7 +6,7 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <RouterLink class="nav-link mx-2" to="/about">About</RouterLink>
+            <RouterLink class="nav-link mx-2" to="/history">История транзакций</RouterLink>
           </li>
 
           <li class="nav-item">
