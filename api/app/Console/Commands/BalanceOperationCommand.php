@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProcessBalanceOperation;
 use App\Models\User;
-use App\Models\Transaction;
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class BalanceOperationCommand extends Command
 {
@@ -24,33 +24,43 @@ class BalanceOperationCommand extends Command
         $amount = (float)$this->argument('amount');
         $description = $this->argument('description');
 
-        $user = User::where('login', $login)->first();
+        // Todo: отдельный сервис
+        $user = $this->getUserByLogin($login);
 
         if (!$user) {
             $this->error("Пользователя {$login} не найдено");
             return;
         }
 
-        DB::transaction(function () use ($user, $type, $amount, $description) {
-            $balance = $user->balance->balance ?? 0;
+        if ($amount < 0) {
+            $this->error('Сумма должна быть не меньше нуля!');
+            return;
+        }
 
-            if ($type === 0 && $balance < $amount) {
-                $this->error('Денег нет, но вы держитесь!');
-                return;
-            }
+        $balance = $user->balance->balance ?? 0;
 
-            $newBalance = $type === 1 ? $balance + $amount : $balance - $amount;
+        if ($type === 0 && $balance < $amount) {
+            $this->error('Денег нет, но вы держитесь!');
+            return;
+        }
 
-            $user->balance()->updateOrCreate([], ['balance' => $newBalance]);
+        ProcessBalanceOperation::dispatch($user, $amount, $type, $description);
 
-            Transaction::create([
-                'user_id' => $user->id,
-                'amount' => $amount,
-                'type' => $type,
-                'description' => $description,
-            ]);
+        $this->info('Операция проведена');
 
-            $this->info('Успех!');
-        });
+    }
+
+    // Todo: мб вынести в репозиторий?
+    /**
+     * Получение пользователя
+     *
+     * @param string $login
+     * @return User|null
+     */
+    private function getUserByLogin(string $login): ?User
+    {
+        $user = User::where('login', $login)->first();
+
+        return $user;
     }
 }

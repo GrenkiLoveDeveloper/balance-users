@@ -4,12 +4,14 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProcessBalanceOperation implements ShouldQueue
 {
@@ -18,7 +20,7 @@ class ProcessBalanceOperation implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public $user;
+    public User $user;
     public $amount;
     public $type;
     public $description;
@@ -39,19 +41,12 @@ class ProcessBalanceOperation implements ShouldQueue
             $balance = $user->balance->balance ?? 0;
 
             if ($this->type === 0 && $balance < $this->amount) {
-                throw new \Exception('Нет денег');
+                throw new Exception('Нет денег');
             }
 
             $newBalance = $this->type === 1 ? $balance + $this->amount : $balance - $this->amount;
 
             $user->balance()->updateOrCreate([], ['balance' => $newBalance]);
-
-            Transaction::create([
-                'user_id' => $user->id,
-                'amount' => $this->amount,
-                'type' => $this->type,
-                'description' => $this->description,
-            ]);
         });
     }
 }
