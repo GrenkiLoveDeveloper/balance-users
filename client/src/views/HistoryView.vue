@@ -36,15 +36,21 @@ import * as api from '@/api/transaction';
 import dayjs from 'dayjs';
 const listData = ref();
 const search = ref('');
-
+import { useLocalStorage } from '@/composables/useLocalStorage';
+const { get } = useLocalStorage();
+const userId = ref(get('userId') ? get('userId') : null);
 const searchDescr = async () => {
-  const { data } = await api.getHistory(search.value);
-  listData.value = data;
+  if (userId.value) {
+    const { data } = await api.getHistory(search.value, userId.value);
+    listData.value = data;
+  }
 };
 
 onMounted(async () => {
-  const { data } = await api.getHistory(search.value);
-  listData.value = data;
+  if (userId.value) {
+    const { data } = await api.getHistory(search.value, userId.value);
+    listData.value = data;
+  }
 });
 </script>
 <style scoped></style>

@@ -5,7 +5,7 @@
       <div class="row mt-4">
         <div class="col-md-6">
           <h3>
-            Ваш баланс: <span id="balance">{{ data?.balance }}</span>
+            Ваш баланс: <span id="balance">{{ data?.balance ?? 'Загрузка' }}</span>
           </h3>
         </div>
       </div>
@@ -37,17 +37,22 @@
 import { ref, onMounted, Ref, onUnmounted } from 'vue';
 import * as api from '@/api/transaction';
 import dayjs from 'dayjs';
+import { useLocalStorage } from '@/composables/useLocalStorage';
+const { get } = useLocalStorage();
+
 const intervalId: Ref<number | null> = ref(null);
 const data = ref();
 
-onMounted(async () => {
-  setTimeout(async () => {
-    data.value = await api.getBalance();
-  }, 1000);
+const userId = ref(get('userId') ? get('userId') : null);
 
-  intervalId.value = setInterval(async () => {
-    data.value = await api.getBalance();
-  }, 10000);
+onMounted(async () => {
+  if (userId.value) {
+    data.value = await api.getBalance(userId.value);
+
+    intervalId.value = setInterval(async () => {
+      data.value = await api.getBalance(userId.value);
+    }, 10000);
+  }
 });
 
 onUnmounted(() => {
