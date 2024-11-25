@@ -2,7 +2,7 @@
   <section>
     <div class="container">
       <h1>История операций</h1>
-      <form class="mb-4" @submit.prevent="searchDescr">
+      <form v-if="listData" class="mb-4" @submit.prevent="searchDescr">
         <div class="input-group">
           <input v-model="search" type="text" name="search" class="form-control" placeholder="Поиск по описанию" />
           <button type="submit" class="btn btn-primary">Поиск</button>

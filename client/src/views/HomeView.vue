@@ -4,11 +4,13 @@
       <h1 class="text-center">Добро пожаловать, путник!</h1>
       <div class="row mt-4">
         <div class="col-md-6">
-          <h3>Ваш баланс: <span id="balance"></span></h3>
+          <h3>
+            Ваш баланс: <span id="balance">{{ data?.balance }}</span>
+          </h3>
         </div>
       </div>
       <div class="row mt-4">
-        <table v-if="data" class="table table-dark">
+        <table v-if="data?.transactions" class="table table-dark">
           <thead>
             <tr>
               <th>Дата</th>
@@ -39,7 +41,9 @@ const intervalId: Ref<number | null> = ref(null);
 const data = ref();
 
 onMounted(async () => {
-  data.value = await api.getBalance();
+  setTimeout(async () => {
+    data.value = await api.getBalance();
+  }, 1000);
 
   intervalId.value = setInterval(async () => {
     data.value = await api.getBalance();
